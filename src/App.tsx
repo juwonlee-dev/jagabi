@@ -1,35 +1,25 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import { FC, Suspense } from 'react'
+import { useRoutes } from 'react-router-dom'
+import routes, { ExtendedRoute } from './router/routes'
 
-function App() {
-  const [count, setCount] = useState(0)
+const createRoutesWithLayout = (routes: ExtendedRoute[]): ExtendedRoute[] => {
+  return routes.map((route) => {
+    const { layout: Layout, children, ...rest } = route
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    const element = <>{route.element}</>
+    return {
+      ...rest,
+      element: Layout ? <Layout>{element}</Layout> : element,
+      children: children ? createRoutesWithLayout(children) : undefined,
+    }
+  })
+}
+
+const App: FC = () => {
+  const element = useRoutes(createRoutesWithLayout(routes))
+
+  return <Suspense fallback={<div>Loading...</div>}>{element}</Suspense>
 }
 
 export default App

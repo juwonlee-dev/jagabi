@@ -2,7 +2,7 @@
   "name": "jagabi",
   "private": true,
   "version": "1.0.0",
-  "homepage": "https://juwonlee-dev.github.io/jagabi",
+  "homepage": "https://juwonlee-dev.github.io/jagabi/",
   "type": "module",
   "scripts": {
     "dev": "vite",
